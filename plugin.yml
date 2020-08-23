@@ -1,0 +1,6 @@
+name: TRecon
+version: 1.0
+main: com.teger.recon.ReconPlugin
+
+commands:
+  rc:

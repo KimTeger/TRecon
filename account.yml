@@ -1,0 +1,8 @@
+MD5-ID:
+	PW: MD5-PW
+	OTP: KEY
+	Logs:
+		- '[20:08:23:12:43:51]Try Connecting at 000.000.000.000'
+		- '[20:08:23:12:44:12]Authenticating Success at 000.000.000.000'
+		- '[20:08:23:12:44:12]Send Command */say hello* at 000.000.000.000'
+		- '[20:08:23:12:59:26]Disconnected at 000.000.000.000'
