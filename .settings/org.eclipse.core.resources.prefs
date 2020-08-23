@@ -1,0 +1,8 @@
+eclipse.preferences.version=1
+encoding//src/com/teger/recon/CommandManager.java=UTF-8
+encoding//src/com/teger/recon/ReconPlugin.java=UTF-8
+encoding//src/com/teger/recon/data=UTF-8
+encoding//src/com/teger/recon/socket/Authenticator.java=UTF-8
+encoding//src/com/teger/recon/socket/Blocker.java=UTF-8
+encoding//src/com/teger/recon/socket/Comvalue.java=UTF-8
+encoding//src/com/teger/recon/socket/Connector.java=UTF-8

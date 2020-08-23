@@ -15,7 +15,8 @@ public enum Comvalue {
 	CMD_RST_END,
 	RECV,
 	DISCON,
-	BLOCK;
+	BLOCK,
+	WAIT;
 	
 	
 }

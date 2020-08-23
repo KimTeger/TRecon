@@ -16,26 +16,26 @@ public class CommandManager implements CommandExecutor{
 	@Override
 	public boolean onCommand(CommandSender cs, Command c, String l, String[] a) {
 		if(a.length < 1) {
-			cs.sendMessage(ChatColor.RED + "[TRecon] /rc help ¸¦ ÅëÇØ µµ¿ò¸»À» È®ÀÎÇÏ¼¼¿ä.");
+			cs.sendMessage(ChatColor.RED + "[TRecon] /rc help ë¥¼ í†µí•´ ë„ì›€ë§ì„ í™•ì¸í•˜ì„¸ìš”.");
 			return true;
 		} else {
 			if(a[0].equalsIgnoreCase("create")) {
 				try {
 					if(a.length != 3) {
-						cs.sendMessage(ChatColor.RED + "[TRecon] /rc help ¸¦ ÅëÇØ µµ¿ò¸»À» È®ÀÎÇÏ¼¼¿ä.");
+						cs.sendMessage(ChatColor.RED + "[TRecon] /rc help ë¥¼ í†µí•´ ë„ì›€ë§ì„ í™•ì¸í•˜ì„¸ìš”.");
 						return true;
 					}
 					Account acc = Account.getAccount(Encryptor.getEncrpytMD5(a[1]));
 					if(acc != null) {
-						cs.sendMessage(ChatColor.RED + "[TRecon] ÀÌ¹Ì Á¸ÀçÇÏ´Â ¾ÆÀÌµðÀÔ´Ï´Ù.");
+						cs.sendMessage(ChatColor.RED + "[TRecon] ì´ë¯¸ ì¡´ìž¬í•˜ëŠ” ì•„ì´ë””ìž…ë‹ˆë‹¤.");
 						return true;
 					}
 					acc = new Account(Encryptor.getEncrpytMD5(a[1]), Encryptor.getEncrpytMD5(a[2]));
 					Account.addAcount(acc);
-					cs.sendMessage(ChatColor.GREEN + "[TRecon] °èÁ¤À» »ý¼ºÇß½À´Ï´Ù.");
+					cs.sendMessage(ChatColor.GREEN + "[TRecon] ê³„ì •ì„ ìƒì„±í–ˆìŠµë‹ˆë‹¤.");
 					return true;
 				} catch (NoSuchAlgorithmException e) {
-					cs.sendMessage(ChatColor.RED + "[TRecon] °èÁ¤ »ý¼º Áß ¿À·ù°¡ ¹ß»ýÇß½À´Ï´Ù.");
+					cs.sendMessage(ChatColor.RED + "[TRecon] ê³„ì • ìƒì„± ì¤‘ ì˜¤ë¥˜ê°€ ë°œìƒí–ˆìŠµë‹ˆë‹¤.");
 					return true;
 				}
 			} else if(a[0].equalsIgnoreCase("delete")) {
@@ -43,28 +43,28 @@ public class CommandManager implements CommandExecutor{
 			} else if(a[0].equalsIgnoreCase("otp")) {
 				try {
 					if(a.length != 3) {
-						cs.sendMessage(ChatColor.RED + "[TRecon] /rc help ¸¦ ÅëÇØ µµ¿ò¸»À» È®ÀÎÇÏ¼¼¿ä.");
+						cs.sendMessage(ChatColor.RED + "[TRecon] /rc help ë¥¼ í†µí•´ ë„ì›€ë§ì„ í™•ì¸í•˜ì„¸ìš”.");
 						return true;
 					}
 					Account acc = Account.getAccount(Encryptor.getEncrpytMD5(a[1]));
 					if(acc == null) {
-						cs.sendMessage(ChatColor.RED + "[TRecon] Á¸ÀçÇÏÁö ¾Ê´Â ¾ÆÀÌµðÀÔ´Ï´Ù.");
+						cs.sendMessage(ChatColor.RED + "[TRecon] ì¡´ìž¬í•˜ì§€ ì•ŠëŠ” ì•„ì´ë””ìž…ë‹ˆë‹¤.");
 						return true;
 					}
 					if(!Authenticator.isMatchedAccount(a[1], a[2])) {
-						cs.sendMessage(ChatColor.RED + "[TRecon] ºñ¹Ð¹øÈ£°¡ ÀÏÄ¡ÇÏÁö ¾Ê½À´Ï´Ù.");
+						cs.sendMessage(ChatColor.RED + "[TRecon] ë¹„ë°€ë²ˆí˜¸ê°€ ì¼ì¹˜í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤.");
 						return true;
 					}
 					if(acc.getOTP() == null) {
-						cs.sendMessage("[TRecon] OTP Å°¸¦ »ý¼ºÇÏ´Â ÁßÀÔ´Ï´Ù...");
+						cs.sendMessage("[TRecon] OTP í‚¤ë¥¼ ìƒì„±í•˜ëŠ” ì¤‘ìž…ë‹ˆë‹¤...");
 						Authenticator.generateOTPKey(acc.getID());
-						cs.sendMessage("[TRecon] OTP Å°¸¦ »ý¼ºÇß½À´Ï´Ù. [ " + acc.getOTP() + " ]");	
+						cs.sendMessage("[TRecon] OTP í‚¤ë¥¼ ìƒì„±í–ˆìŠµë‹ˆë‹¤. [ " + acc.getOTP() + " ]");	
 					} else {
-						cs.sendMessage("[TRecon] »ç¿ëÁßÀÎ OTP Å° [ " + acc.getOTP() + " ]");	
+						cs.sendMessage("[TRecon] ì‚¬ìš©ì¤‘ì¸ OTP í‚¤ [ " + acc.getOTP() + " ]");	
 					}
 					return true;
 				} catch (NoSuchAlgorithmException e) {
-					cs.sendMessage(ChatColor.RED + "[TRecon] °èÁ¤ »ý¼º Áß ¿À·ù°¡ ¹ß»ýÇß½À´Ï´Ù.");
+					cs.sendMessage(ChatColor.RED + "[TRecon] ê³„ì • ìƒì„± ì¤‘ ì˜¤ë¥˜ê°€ ë°œìƒí–ˆìŠµë‹ˆë‹¤.");
 					return true;
 				}
 			} else if(a[0].equalsIgnoreCase("rotp")) {
