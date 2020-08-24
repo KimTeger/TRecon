@@ -26,10 +26,11 @@ public class Connector extends Thread{
 
 	public ServerSocket serverSocket;
 	public Socket socket;
-	private String key = "7654";
+	private String key;
 	
 	@Override
 	public void run() {
+		key = FileManager.get("connect-key");
 		try { boot(); } catch (Exception e) { e.printStackTrace(); }
 	}
 	
@@ -38,24 +39,37 @@ public class Connector extends Thread{
 		while(true) {
 			try {
 				serverSocket = new ServerSocket(Integer.parseInt(FileManager.get("port")));
-				System.out.println("[TRecon] " + serverSocket.getLocalPort() + " 에서 원격 서버가 개방되었습니다.");
+				System.out.println("[TRecon] TRecon Server was open at " + serverSocket.getLocalPort() + " port.");
 				socket = serverSocket.accept();
-				System.out.println("[TRecon] " + socket.getInetAddress().getHostAddress() + " 에서 로그인을 시도 중입니다.");
-				
-				//Sign in
+				System.out.println("[TRecon] " + socket.getInetAddress().getHostAddress() + " try sign in.");
 				
 				DataInputStream dis = new DataInputStream(socket.getInputStream());
 				DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
+				
+				//Block
+				
+				if(Blocker.isBlocked(socket.getInetAddress().getHostAddress())) {
+					System.out.println("[TRecon] " + socket.getInetAddress().getHostAddress() + " blocked.");
+					dos.writeUTF(Encryptor.getEncrpytAES(Comvalue.BLOCK.toString(), key));
+					socket.close();
+					serverSocket.close();
+				}
+				
+				//Sign in
 
 				dos.writeUTF(Encryptor.getEncrpytAES(Comvalue.LGN_ID_REQ.toString(), key));
 				String[] id_pw = Encryptor.getDecrpytAES(dis.readUTF(), key).split("===");
 				Account acc = Account.getAccount(Encryptor.getEncrpytMD5(id_pw[0]));
 				String recv = null;
 				if(Authenticator.isMatchedAccount(id_pw[0], id_pw[1])) {
-					System.out.println("[TRecon] " + socket.getInetAddress().getHostAddress() + " 로그인 성공");
+					Blocker.resetFailCount(socket.getInetAddress().getHostAddress());
+					System.out.println("[TRecon] " + socket.getInetAddress().getHostAddress() + " sign in success");
 					dos.writeUTF(Encryptor.getEncrpytAES(Comvalue.LGN_SCS.toString(), key));
 				} else {
-					System.out.println("[TRecon] " + socket.getInetAddress().getHostAddress() + " 로그인 실패");
+					Blocker.increaseFailCount(socket.getInetAddress().getHostAddress());
+					System.out.println("[TRecon] " + socket.getInetAddress().getHostAddress() + " sign in fail");
+					if(Blocker.isBlocked(socket.getInetAddress().getHostAddress()))
+						System.out.println("[TRecon] " + socket.getInetAddress().getHostAddress() + " blocked.");
 					dos.writeUTF(Encryptor.getEncrpytAES(Comvalue.LGN_FIL.toString(), key));
 					socket.close();
 					serverSocket.close();
@@ -65,14 +79,14 @@ public class Connector extends Thread{
 					dos.writeUTF(Encryptor.getEncrpytAES(Comvalue.LGN_OTP_REQ.toString(), key));
 					recv = dis.readUTF();
 					if(Authenticator.isMatchedOTP(id_pw[0], Encryptor.getDecrpytAES(recv, key))) {
-						System.out.println("[TRecon] " + socket.getInetAddress().getHostAddress() + " OTP 인증 성공");
+						System.out.println("[TRecon] " + socket.getInetAddress().getHostAddress() + " OTP authentication success");
 						dos.writeUTF(Encryptor.getEncrpytAES(Comvalue.LGN_OTP_SCS.toString(), key));
 					} else {
-						System.out.println("[TRecon] " + socket.getInetAddress().getHostAddress() + " OTP 인증 실패");
+						System.out.println("[TRecon] " + socket.getInetAddress().getHostAddress() + " OTP authentication fail");
 						dos.writeUTF(Encryptor.getEncrpytAES(Comvalue.LGN_OTP_FIL.toString(), key));
 					}
 				}
-				System.out.println("[TRecon] " + socket.getInetAddress().getHostAddress() + " 접속 성공");
+				System.out.println("[TRecon] " + socket.getInetAddress().getHostAddress() + " connect success");
 				
 				//Command Sender
 				while(true) {
@@ -105,6 +119,4 @@ public class Connector extends Thread{
 			}
 		}
 	}
-	
-	//NTP Server
 }
