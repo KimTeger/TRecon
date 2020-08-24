@@ -3,12 +3,16 @@ package com.teger.recon.socket;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.Callable;
 
+import org.apache.commons.net.ntp.NTPUDPClient;
+import org.apache.commons.net.ntp.TimeInfo;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -26,14 +30,11 @@ public class Connector extends Thread{
 	
 	@Override
 	public void run() {
-		try {
-			boot();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		try { boot(); } catch (Exception e) { e.printStackTrace(); }
 	}
 	
 	public void boot() throws Exception {
+		
 		while(true) {
 			try {
 				serverSocket = new ServerSocket(Integer.parseInt(FileManager.get("port")));
@@ -97,6 +98,7 @@ public class Connector extends Thread{
 				serverSocket.close();
 				continue;
 			} catch (NumberFormatException | IOException e) {
+				e.printStackTrace();
 				socket.close();
 				serverSocket.close();
 				continue;
@@ -104,4 +106,5 @@ public class Connector extends Thread{
 		}
 	}
 	
+	//NTP Server
 }

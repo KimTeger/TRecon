@@ -15,9 +15,9 @@ public class ReconPlugin extends JavaPlugin{
 		plugin = this;
 		getCommand("rc").setExecutor(new CommandManager());
 		FileManager.ReadFileConfiguration();
-		System.out.println(FileManager.get("connect-key"));
 		Connector conthread = new Connector();
 		conthread.start();
+		
 	}
 	
 	@Override
