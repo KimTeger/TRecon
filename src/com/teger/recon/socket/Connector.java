@@ -9,6 +9,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.Callable;
 
 import org.apache.commons.net.ntp.NTPUDPClient;
@@ -90,7 +91,9 @@ public class Connector extends Thread{
 				
 				//Command Sender
 				while(true) {
+					System.out.println("Waiting...");
 					String[] recvl = Encryptor.getDecrpytAES(dis.readUTF(), key).split("===");
+					System.out.println("Received !");
 					if(Comvalue.valueOf(recvl[0]).equals(Comvalue.DISCON)) break;
 					Comvalue cv = Comvalue.valueOf(recvl[0]);
 					if(cv.equals(Comvalue.CMD_VAL)) {
@@ -101,11 +104,16 @@ public class Connector extends Thread{
 						new BukkitRunnable() {
 				            @Override
 				            public void run() {
-				                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd);
+				                Bukkit.dispatchCommand(ReconPlugin.sender, cmd);
 				            }
 				        }.runTask(ReconPlugin.plugin);
+				        sleep(500);
+						List<String> res = ReconPlugin.sender.getResponses();
+						dos.writeUTF(Encryptor.getEncrpytAES(Comvalue.CMD_RST_START.toString(), key));
+						for(String l : res)
+							dos.writeUTF(Encryptor.getEncrpytAES(l, key));
+						dos.writeUTF(Encryptor.getEncrpytAES(Comvalue.CMD_RST_END.toString(), key));
 					}
-					dos.writeUTF(Encryptor.getEncrpytAES(Comvalue.RECV.toString(), key));
 				}
 				
 				socket.close();

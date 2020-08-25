@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -35,7 +36,9 @@ public class FileManager {
 		}
 		for(String key : fconfig.getKeys(true))
 			configvalue.put(key, fconfig.getString(key));
-		for(String ip : fblocklist.getConfigurationSection("fail-list").getKeys(false)) {
+		ConfigurationSection sec = fblocklist.getConfigurationSection("fail-list");
+		if(sec != null)
+		for(String ip : sec.getKeys(false)) {
 			int fail = fblocklist.getInt("fail-list." + ip);
 			while(Blocker.getFailCount(ip) != fail) Blocker.increaseFailCount(ip);
 		}
